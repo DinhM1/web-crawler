@@ -1,9 +1,11 @@
 import re
 from urllib.parse import urlparse
 
+
 def scraper(url, resp):
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
+
 
 def extract_next_links(url, resp):
     # Implementation required.
@@ -17,10 +19,15 @@ def extract_next_links(url, resp):
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
     return list()
 
+
 def is_valid(url):
     # Decide whether to crawl this url or not. 
     # If you decide to crawl it, return True; otherwise return False.
     # There are already some conditions that return False.
+
+    if not check_url(url):
+        return False
+
     try:
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
@@ -36,5 +43,21 @@ def is_valid(url):
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
 
     except TypeError:
-        print ("TypeError for ", parsed)
+        print("TypeError for ", parsed)
         raise
+
+
+def check_url(url) -> bool:
+    """
+    Checks if the passed url is part of the valid domains
+    :param url:
+    :return: bool
+    """
+    if ".ics.uci.edu/" in url:
+        return True
+    elif ".cs.uci.edu/" in url:
+        return True
+    elif ".informatics.uci.edu/" in url:
+        return True
+    elif ".stat.uci.edu/" in url:
+        return True
