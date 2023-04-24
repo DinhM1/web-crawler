@@ -23,7 +23,7 @@ def extract_next_links(url, resp):
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
 
     links = []
-    if resp.status == 200:
+    if resp.status == 200 and is_valid(url):
 
         soup = BeautifulSoup(resp.raw_response.content, features="html.parser")
 
