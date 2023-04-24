@@ -16,22 +16,24 @@ def extract_next_links(url, resp):
     # was some kind of problem.
     # resp.error: when status is not 200, you can check the error here, if needed.
     # resp.raw_response: this is where the page actually is. More specifically, the raw_response has two parts:
-    # resp.raw_response.url: the url, again resp.raw_response.
-    # content: the content of the page!
+    # resp.raw_response.url: the url, again
+    # resp.raw_response.content: the content of the page!
 
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
 
+    print(resp.raw_response.content)
+
     print("URL: " + url)
 
-    links = []
+    # links = []
+    #
+    # parsed = BeautifulSoup(resp.raw_response.content, parse_only='a', features="html.parser")
+    #
+    # for element in parsed:
+    #     if element.has_attr('href'):
+    #         links.append(element)
 
-    parsed = BeautifulSoup(resp.raw_response.content, parse_only='a', features="html.parser")
-
-    for element in parsed:
-        if element.has_attr('href'):
-            links.append(element)
-
-    return parsed
+    return links
 
 
 def is_valid(url):
