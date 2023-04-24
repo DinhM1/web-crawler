@@ -38,8 +38,8 @@ def is_valid(url):
     # If you decide to crawl it, return True; otherwise return False.
     # There are already some conditions that return False.
 
-    if not check_url(url):
-        return False
+    # if not check_url(url):
+    #     return False
 
     try:
         parsed = urlparse(url)
