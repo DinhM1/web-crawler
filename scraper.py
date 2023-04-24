@@ -25,7 +25,7 @@ def extract_next_links(url, resp):
 
     links = []
 
-    parsed = BeautifulSoup(resp, parse_only='a', features="html.parser")
+    parsed = BeautifulSoup(resp.raw_response.content, parse_only='a', features="html.parser")
 
     for element in parsed:
         if element.has_attr('href'):
