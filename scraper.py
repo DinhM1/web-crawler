@@ -21,17 +21,12 @@ def extract_next_links(url, resp):
 
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
 
-    print(resp.raw_response.content)
+    links = []
 
-    print("URL: " + url)
+    soup = BeautifulSoup(resp.raw_response.content)
 
-    # links = []
-    #
-    # parsed = BeautifulSoup(resp.raw_response.content, parse_only='a', features="html.parser")
-    #
-    # for element in parsed:
-    #     if element.has_attr('href'):
-    #         links.append(element)
+    for element in soup.find_all('a', href=True):
+        print(element)
 
     return links
 
