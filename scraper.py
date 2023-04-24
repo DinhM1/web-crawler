@@ -1,5 +1,6 @@
 import re
 from bs4 import BeautifulSoup, SoupStrainer
+from urllib.parse import urlparse
 
 
 def scraper(url, resp):
@@ -25,7 +26,7 @@ def extract_next_links(url, resp):
 
     soup = BeautifulSoup(resp.raw_response.content)
 
-    for element in soup.find_all('a', href=True):
+    for element in soup.find_all('a', href=True, features="html.parser"):
         links.append(element['href'])
 
     return links
