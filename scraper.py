@@ -2,9 +2,11 @@ import re
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup, SoupStrainer
 
+
 def scraper(url, resp):
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
+
 
 def extract_next_links(url, resp):
     # Implementation required.
@@ -35,6 +37,7 @@ def extract_next_links(url, resp):
 
     return links
 
+
 def is_valid(url):
     # Decide whether to crawl this url or not. 
     # If you decide to crawl it, return True; otherwise return False.
@@ -54,14 +57,16 @@ def is_valid(url):
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
 
     except TypeError:
-        print ("TypeError for ", parsed)
+        print("TypeError for ", parsed)
         raise
+
 
 def filter_errors(url):
     if len(url['href']) < 2:
         return False
     else:
         return True
+
 
 def process_relative(url):
     """
@@ -78,8 +83,10 @@ def process_relative(url):
     else:
         return False
 
+
 def process_double_slash(url):
     pass
+
 
 def filter_fragments(url):
     if url['href'][0] == "#":
