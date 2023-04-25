@@ -1,11 +1,17 @@
 import re
-from urllib.parse import urlparse
+import posixpath
+
+from urllib.parse import urlparse, urljoin
 from bs4 import BeautifulSoup, SoupStrainer
+
+from nltk.tokenize import RegexpTokenizer
 
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
-    return [link for link in links if is_valid(link)]
+    tokens = tokenize(resp)
+
+    return [link for link in links if is_valid(link)], tokens
 
 
 def extract_next_links(url, resp):
@@ -21,21 +27,44 @@ def extract_next_links(url, resp):
 
     links = []
 
-    if resp.status == 200 and is_valid(url):
-        soup = BeautifulSoup(resp.raw_response.content, features="html.parser", parse_only=SoupStrainer('a'))
+    count = 0
 
-        for element in soup:
-            if element.has_attr('href'):
-                if filter_errors(element):
-                    pass
-                if filter_fragments(element):
-                    pass
-                if process_relative(element):
-                    pass
-                else:
-                    print(element['href'])
+    if resp.status == 200 and is_valid(url):
+        soup = BeautifulSoup(resp.raw_response.content, "lxml")
+
+        for element in soup.findAll('a'):
+            if len(element.get('href')) < 2:
+                pass
+            elif element.get('href').startswith("#"):
+                pass
+            elif element.get('href').startswith("//"):
+                proper_url = element.get('href').split("//")[1]
+                links.append(proper_url)
+                count = count + 1
+            elif element.get('href').startswith("/"):
+                absolute_url = urljoin(url, element.get('href'))
+                links.append(absolute_url)
+                count = count + 1
+            elif is_valid(element.get('href')):
+                count = count + 1
+            else:
+                fixed_url = urljoin(url, "/" + element.get('href'))
 
     return links
+
+def tokenize(response):
+    soup = BeautifulSoup(response.raw_response.content, "lxml")
+    tokenizer = RegexpTokenizer(r'\w+')
+    tokens = tokenizer.tokenize(soup.get_text())
+
+    return tokens
+
+
+def process_relative(url):
+    if url.startswith("www."):
+        return "https://" + url
+    else:
+        return "https://www." + url
 
 
 def is_valid(url):
@@ -59,35 +88,3 @@ def is_valid(url):
     except TypeError:
         print("TypeError for ", parsed)
         raise
-
-
-def filter_errors(url):
-    if len(url['href']) < 2:
-        return False
-    else:
-        return True
-
-
-def process_relative(url):
-    """
-    Checks if a url is a relative url.
-    :param url: the url
-    :return: True if it is a relative URL.
-    """
-
-    if len(url['href']) < 2:
-        return False
-
-    if url['href'][0] == "/" and url['href'][1] != "/":
-        return True
-    else:
-        return False
-
-
-def process_double_slash(url):
-    pass
-
-
-def filter_fragments(url):
-    if url['href'][0] == "#":
-        return True
