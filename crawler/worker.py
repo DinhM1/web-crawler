@@ -22,9 +22,10 @@ class Results:
         # print(extract)
         # subdomain = extract.subdomain
 
-        subdomain_pattern = r'^(?:https?://)?([a-zA-Z0-9-]+\.)*(?<=http://)([^./]+\.)?aaa\.bbb\.edu'
+        subdomain_pattern = r'^(?:https?://)?([a-zA-Z0-9-]+\.)*?ics\.uci\.edu'
         match = re.match(subdomain_pattern, url)
         subdomain = match.group(1) if match else None
+        print(subdomain)
 
         if subdomain in self.subdomains:
             self.subdomains[subdomain] = self.subdomains[subdomain] + 1
